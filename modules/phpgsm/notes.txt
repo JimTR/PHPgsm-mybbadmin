@@ -1,0 +1,3 @@
+mysql 
+SELECT game_servers.*, servers.rserver_update FROM `game_servers` JOIN servers on servers.server_id = game_servers.server_id
+SELECT `steam_id`,players.name,players.country,players.country_code,player_history.game, player_history.`log_ons`,DATE_FORMAT(FROM_UNIXTIME(last_play), '%e %b %Y %H:%i:%s') AS 'time' FROM `player_history` left join players on `steam_id` = players.`steam_id64` WHERE `last_play` > 1614384001 ORDER BY `player_history`.`log_ons` DESC, name ASC, game desc
