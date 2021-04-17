@@ -88,6 +88,7 @@ function buttonclick(id) {
     $table->construct_header('IP/Port');
     $table->construct_header('Type');
     $table->construct_header('Location');
+     $table->construct_header('Disk Space');
      $table->construct_header('Status');
     $table->construct_header('Actions', ['class' => 'align_center']);
 
@@ -117,6 +118,7 @@ function buttonclick(id) {
         $table->construct_cell($server['host'].':'.$server['port'], ['style' => 'width: 10%']);
          $table->construct_cell($server['game'], ['style' => 'width: 7%']);
         $table->construct_cell($server['location'], ['style' => 'width: 15%']);
+        $table->construct_cell($server['disk_space'], ['style' => 'width: 5%']);
          $table->construct_cell($running, ['style' => 'width: 4%','id' =>$server['host_name'].'stat','class' => $oclass] );
         $table->construct_cell(
             '<button '.$button1class.' id= "'.$server['host_name'].'" cmd="'.$cmd.'" url="'.$server['url'].':'.$server['bport'].'" sid="'.$id.'"  onclick="buttonclick(id)">'.$button1.'</button>'.

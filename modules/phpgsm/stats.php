@@ -70,11 +70,26 @@ require 'inc/Emoji.php';
 	$sql = $sql = "select servers.server_name,player_history.*,players.name,players.country_code from player_history left join players on `steam_id` = players.steam_id64 left join servers on player_history.`game` = servers.host_name  ORDER BY `player_history`.`log_ons` DESC LIMIT 10";
 	$players = $rdb->get_results($sql);
 	foreach ($players as $player) {
-		// top 10 players
+		// top 10 players server
 		$playerN2 = Emoji::Decode($player['name']);
 		$player['last_play'] = date('d-m-Y h:i:s a',$player['last_play']);
 		$map = '<img style="width:10%;vertical-align: middle;" src="https://ipdata.co/flags/'.trim(strtolower($player['country_code'])).'.png">';
 		$pd.='<tr><td style="vertical-align: middle;">'.$map.'  '.$playerN2.'</td><td>'.$player['server_name'].'</td><td style="text-align:right;"><span style="padding-right:70%;">'.$player['log_ons'].'</span></td><td>'.$player['last_play'].'</td></tr>';
+	}
+	$sql = "select players.name,players.country_code,players.log_ons,players.last_log_on,players.first_log_on from players ORDER BY `players`.`log_ons` DESC LIMIT 10";;
+	$players = $rdb->get_results($sql);
+	foreach ($players as $player) {
+		// top 10 players
+		$playerN2 = Emoji::Decode($player['name']);
+		$player['last_log_on'] = date('d-m-Y h:i:s a',$player['last_log_on']);
+		if ($player['first_log_on'] >0 ) {
+			$player['first_log_on'] = date('d-m-Y h:i:s a',$player['first_log_on']);
+		}
+		else {
+			$player['first_log_on'] = 'N/A';
+		}
+		$map = '<img style="width:10%;vertical-align: middle;" src="https://ipdata.co/flags/'.trim(strtolower($player['country_code'])).'.png">';
+		$fpd.='<tr><td style="vertical-align: middle;">'.$map.'  '.$playerN2.'</td><td style="width:208px;">'.$player['first_log_on'].'</td><td style="text-align:right;"><span style="padding-right:70%;">'.$player['log_ons'].'</span></td><td>'.$player['last_log_on'].'</td></tr>';
 	}
 	$sql = 'select * from logins limit 10';
 	$countries =  $rdb->get_results($sql);
@@ -84,6 +99,13 @@ require 'inc/Emoji.php';
 		$map = '<img style="width:6%;vertical-align: middle;" src="https://ipdata.co/flags/'.trim(strtolower($country['country_code'])).'.png">';
 		$ct .= '<tr><td>'.$map.'  '.$country['country'].'</td><td>'.$country['players'].'</td><td style="text-align:right;"><span style="padding-right:70%;">'.$country['logins'].'</span></td><td></td></tr>'; 
 	}	
+	$sql = "select servers.host_name,servers.running from servers order by servers.host_name";
+	$servers = $rdb->get_results($sql);
+	foreach ($servers as $server) {
+		// add selects
+		$sv1 .= '<option value="'.$server['host_name'].'">'.$server['host_name'].'</option>';
+    
+	}
 	$table = new Table();
 	$page->add_breadcrumb_item('PHPgsm', 'index.php?module=phpgsm');
     $page->add_breadcrumb_item('Statistics', 'index.php?module=phpgsm-stats');
